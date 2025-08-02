@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { DollarSign, Package, Clock, Calendar, AlertTriangle, CheckCircle, FileQuestion, MessageSquare, Users } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { DollarSign, Package, Clock, Calendar, AlertTriangle, CheckCircle, FileQuestion, MessageSquare, Users, ChevronDown, ChevronUp } from 'lucide-react';
 interface OptionVariant {
   id: string;
   name: string;
@@ -49,6 +49,7 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
   viewMode = 'compact',
   onOptionChange
 }) => {
+  const [isExpanded, setIsExpanded] = useState(true);
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -107,7 +108,10 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
     }
   };
   return <section className="bg-slate-50 rounded-xl p-6">
-      <div className="flex items-center justify-between mb-6">
+      <div 
+        className="flex items-center justify-between mb-6 cursor-pointer hover:bg-slate-50 -mx-6 px-6 py-3 rounded-lg transition-colors"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
         <div className="flex items-center gap-3">
           <Package className="w-6 h-6 text-blue-600" />
           <h4 className="text-xl font-bold text-slate-800">{title}</h4>
@@ -120,20 +124,38 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
               <span className="capitalize">Quote {quoteStatus}</span>
             </div>}
         </div>
-        <div className="text-right">
-          <p className="text-sm text-slate-500">Section Total</p>
-          {workByOthers ? <div>
-              <p className="text-2xl font-bold text-purple-600">By Others</p>
-              <p className="text-xs text-slate-500">Schedule Impact Only</p>
-            </div> : hasQuote ? <p className="text-2xl font-bold text-blue-600">{formatCurrency(subtotal)}</p> : <div>
-              <p className="text-2xl font-bold text-slate-400">TBD</p>
-              {expectedQuoteDate && <p className="text-xs text-slate-500">Expected: {expectedQuoteDate}</p>}
-            </div>}
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <p className="text-sm text-slate-500">Section Total</p>
+            {workByOthers ? <div>
+                <p className="text-2xl font-bold text-purple-600">By Others</p>
+                <p className="text-xs text-slate-500">Schedule Impact Only</p>
+              </div> : hasQuote ? <p className="text-2xl font-bold text-blue-600">{formatCurrency(subtotal)}</p> : <div>
+                <p className="text-2xl font-bold text-slate-400">TBD</p>
+                {expectedQuoteDate && <p className="text-xs text-slate-500">Expected: {expectedQuoteDate}</p>}
+              </div>}
+          </div>
+          <motion.div
+            animate={{ rotate: isExpanded ? 0 : 180 }}
+            transition={{ duration: 0.2 }}
+            className="text-slate-400"
+          >
+            <ChevronDown className="w-5 h-5" />
+          </motion.div>
         </div>
       </div>
       
-      <div className="space-y-6">
-        {items.map((item, index) => <motion.article key={item.id} initial={{
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <div className="space-y-6">
+              {items.map((item, index) => <motion.article key={item.id} initial={{
         opacity: 0,
         x: -20
       }} animate={{
@@ -244,7 +266,10 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
               </div>
             </div>
           </motion.article>)}
-      </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>;
 };
 export default EstimateSection;
