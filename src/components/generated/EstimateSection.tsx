@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { DollarSign, Package, Clock, Calendar, AlertTriangle, CheckCircle, FileQuestion, MessageSquare } from 'lucide-react';
+import { DollarSign, Package, Clock, Calendar, AlertTriangle, CheckCircle, FileQuestion, MessageSquare, Users } from 'lucide-react';
 interface OptionVariant {
   id: string;
   name: string;
@@ -34,6 +34,7 @@ interface EstimateSectionProps {
   hasQuote?: boolean;
   quoteStatus?: 'pending' | 'requested' | 'in-progress';
   expectedQuoteDate?: string;
+  workByOthers?: boolean;
   onOptionChange?: (itemId: string, optionId: string) => void;
 }
 const EstimateSection: React.FC<EstimateSectionProps> = ({
@@ -43,6 +44,7 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
   hasQuote = true,
   quoteStatus,
   expectedQuoteDate,
+  workByOthers = false,
   onOptionChange
 }) => {
   const formatCurrency = (amount: number) => {
@@ -107,14 +109,21 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
         <div className="flex items-center gap-3">
           <Package className="w-6 h-6 text-blue-600" />
           <h4 className="text-xl font-bold text-slate-800">{title}</h4>
-          {!hasQuote && <div className={`flex items-center gap-2 px-3 py-1 rounded-full border text-sm font-medium ${getQuoteStatusColor(quoteStatus)}`}>
+          {workByOthers && <div className="flex items-center gap-2 px-3 py-1 rounded-full border text-sm font-medium text-purple-600 bg-purple-50 border-purple-200">
+              <Users className="w-4 h-4" />
+              <span>Work by Others</span>
+            </div>}
+          {!hasQuote && !workByOthers && <div className={`flex items-center gap-2 px-3 py-1 rounded-full border text-sm font-medium ${getQuoteStatusColor(quoteStatus)}`}>
               {getQuoteStatusIcon(quoteStatus)}
               <span className="capitalize">Quote {quoteStatus}</span>
             </div>}
         </div>
         <div className="text-right">
           <p className="text-sm text-slate-500">Section Total</p>
-          {hasQuote ? <p className="text-2xl font-bold text-blue-600">{formatCurrency(subtotal)}</p> : <div>
+          {workByOthers ? <div>
+              <p className="text-2xl font-bold text-purple-600">By Others</p>
+              <p className="text-xs text-slate-500">Schedule Impact Only</p>
+            </div> : hasQuote ? <p className="text-2xl font-bold text-blue-600">{formatCurrency(subtotal)}</p> : <div>
               <p className="text-2xl font-bold text-slate-400">TBD</p>
               {expectedQuoteDate && <p className="text-xs text-slate-500">Expected: {expectedQuoteDate}</p>}
             </div>}
@@ -172,7 +181,9 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-1">
                               <p className="font-medium text-slate-800 text-sm">{option.name}</p>
-                              <p className="font-semibold text-blue-600 text-sm">{formatCurrency(option.unitCost)}</p>
+                              <p className={`font-semibold text-sm ${option.hasQuote === false ? 'text-slate-400' : 'text-blue-600'}`}>
+                                {option.hasQuote === false ? 'TBD' : formatCurrency(option.unitCost)}
+                              </p>
                             </div>
                             <p className="text-xs text-slate-600 mb-2">{option.description}</p>
                             <div className="flex gap-2">
@@ -204,14 +215,17 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
                   <div className="text-center lg:text-left">
                     <p className="text-xs text-slate-500 uppercase tracking-wide">Unit Cost</p>
                     <p className="font-semibold text-slate-800">
-                      {hasQuote ? formatCurrency(item.unitCost) : 'TBD'}
+                      {workByOthers ? 'By Others' : hasQuote ? formatCurrency(item.unitCost) : 'TBD'}
                     </p>
                   </div>
                   
                   <div className="col-span-2 lg:col-span-1 text-center lg:text-left">
                     <p className="text-xs text-slate-500 uppercase tracking-wide">Line Total</p>
                     <div className="flex items-center gap-1 justify-center lg:justify-start">
-                      {hasQuote ? <>
+                      {workByOthers ? <>
+                          <Users className="w-4 h-4 text-purple-600" />
+                          <p className="text-xl font-bold text-purple-600">By Others</p>
+                        </> : hasQuote ? <>
                           <DollarSign className="w-4 h-4 text-green-600" />
                           <p className="text-xl font-bold text-green-600">
                             {formatCurrency(item.lineTotal).replace('$', '')}
