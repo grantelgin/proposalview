@@ -58,8 +58,8 @@ const mockEstimateData: EstimateData = {
   clientAddress: "1234 Business District, Downtown City, ST 12345",
   estimateId: "EST-2024-001",
   estimateDate: "March 15, 2024",
-  projectDescription: "Complete construction of a 5-story luxury commercial office building with modern amenities, underground parking, and premium finishes throughout.",
-  projectImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=400&fit=crop",
+  projectDescription: "Comprehensive construction of a professional recording studio complex featuring a central 70' x 37' live performance and stage area with soaring clear-span ceilings (29'8\" at stage elevation, 35'7\" at live area). The facility includes a mezzanine balcony spanning the 37' width along the rear of the live space. Wing A (60' x 20') houses ground-floor recording booths with second-floor residential quarters including bedrooms and full bathrooms. Wing C (60' x 54') accommodates the control room, recreational amenities including golf simulator and billiard area, ground-floor lounge with powder room, and vertical circulation to the upper level. The second floor of Wing C features a full kitchen/bar facility, upper lounge, and additional bedroom suites with private bathrooms.",
+  projectImage: "/iso.png",
   sections: [{
     id: "structural",
     title: "Structural System",
