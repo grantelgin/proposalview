@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import EstimateHeader from './EstimateHeader';
 import ProjectOverviewSection from './ProjectOverviewSection';
 import EstimateSection from './EstimateSection';
 import EstimateSummary from './EstimateSummary';
+interface OptionVariant {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  unitCost: number;
+  leadTime: number; // in weeks
+  installationTime: number; // in weeks
+  scheduleImpact: 'minimal' | 'moderate' | 'significant';
+  mpid?: string;
+}
 interface LineItem {
   id: string;
   name: string;
@@ -13,6 +24,12 @@ interface LineItem {
   unit: string;
   unitCost: number;
   lineTotal: number;
+  leadTime?: number;
+  installationTime?: number;
+  scheduleImpact?: 'minimal' | 'moderate' | 'significant';
+  hasOptions?: boolean;
+  options?: OptionVariant[];
+  selectedOption?: string;
   mpid?: string;
 }
 interface EstimateSectionData {
@@ -35,6 +52,8 @@ interface EstimateData {
   taxRate: number;
   taxAmount: number;
   grandTotal: number;
+  totalLeadTime: number;
+  totalInstallationTime: number;
   mpid?: string;
 }
 const mockEstimateData: EstimateData = {
@@ -46,6 +65,127 @@ const mockEstimateData: EstimateData = {
   projectDescription: "Complete construction of a 5-story luxury commercial office building with modern amenities, underground parking, and premium finishes throughout.",
   projectImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=400&fit=crop",
   sections: [{
+    id: "structural",
+    title: "Structural System",
+    subtotal: 285000,
+    items: [{
+      id: "framing-system",
+      name: "Building Frame Structure",
+      description: "Primary structural system for the 5-story building",
+      image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=300&h=200&fit=crop",
+      quantity: 1,
+      unit: "complete system",
+      unitCost: 285000,
+      lineTotal: 285000,
+      hasOptions: true,
+      selectedOption: "steel-frame",
+      options: [{
+        id: "wood-truss",
+        name: "Wood Truss System",
+        description: "Engineered wood trusses with laminated beams and traditional framing",
+        image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=200&fit=crop",
+        unitCost: 245000,
+        leadTime: 8,
+        installationTime: 6,
+        scheduleImpact: 'minimal',
+        mpid: "5bfd74ee-39de-4a14-97fb-a4ab64d6dafc"
+      }, {
+        id: "steel-frame",
+        name: "Steel Frame System",
+        description: "Structural steel framing with beams, columns, and connections",
+        image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=300&h=200&fit=crop",
+        unitCost: 285000,
+        leadTime: 12,
+        installationTime: 4,
+        scheduleImpact: 'moderate',
+        mpid: "e509d7b4-0742-48dd-8d35-cffc63d2b55d"
+      }],
+      mpid: "07596eb3-08cd-42b5-b9cd-61ab05d038f5"
+    }],
+    mpid: "0f34cdfc-e579-4701-9ee2-ad5305264463"
+  }, {
+    id: "exterior",
+    title: "Exterior & Envelope",
+    subtotal: 195000,
+    items: [{
+      id: "exterior-siding",
+      name: "Exterior Siding System",
+      description: "Complete exterior wall cladding system",
+      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=300&h=200&fit=crop",
+      quantity: 8500,
+      unit: "sq ft",
+      unitCost: 18,
+      lineTotal: 153000,
+      hasOptions: true,
+      selectedOption: "steel-siding",
+      options: [{
+        id: "steel-siding",
+        name: "Steel Panel Siding",
+        description: "Insulated steel panels with weather-resistant coating",
+        image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=300&h=200&fit=crop",
+        unitCost: 18,
+        leadTime: 6,
+        installationTime: 3,
+        scheduleImpact: 'minimal',
+        mpid: "d256ce4d-b5f5-470d-8f95-a1b80663a714"
+      }, {
+        id: "hardiboard-siding",
+        name: "HardiBoard Fiber Cement",
+        description: "Durable fiber cement siding with premium finish options",
+        image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop",
+        unitCost: 22,
+        leadTime: 4,
+        installationTime: 5,
+        scheduleImpact: 'moderate',
+        mpid: "f90160f0-2e24-45a6-a4e1-d5bb64ba8011"
+      }],
+      mpid: "cf7a6e68-5a8c-4f4c-afbc-b402d3dce137"
+    }, {
+      id: "roofing-system",
+      name: "Premium Roofing System",
+      description: "Complete roofing system with color options",
+      image: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=300&h=200&fit=crop",
+      quantity: 12000,
+      unit: "sq ft",
+      unitCost: 3.5,
+      lineTotal: 42000,
+      hasOptions: true,
+      selectedOption: "charcoal-gray",
+      options: [{
+        id: "charcoal-gray",
+        name: "Charcoal Gray TPO",
+        description: "Professional charcoal gray membrane roofing",
+        image: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=300&h=200&fit=crop",
+        unitCost: 3.5,
+        leadTime: 3,
+        installationTime: 2,
+        scheduleImpact: 'minimal',
+        mpid: "032f5dbe-95de-4fd6-9c3d-d3cf76024d36"
+      }, {
+        id: "slate-blue",
+        name: "Slate Blue TPO",
+        description: "Premium slate blue membrane with enhanced UV protection",
+        image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop",
+        unitCost: 4.2,
+        leadTime: 4,
+        installationTime: 2,
+        scheduleImpact: 'minimal',
+        mpid: "44ab96cc-ab6f-45a1-a22a-d5f03bd00083"
+      }, {
+        id: "terra-cotta",
+        name: "Terra Cotta TPO",
+        description: "Warm terra cotta color with superior weather resistance",
+        image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300&h=200&fit=crop",
+        unitCost: 4.0,
+        leadTime: 5,
+        installationTime: 2,
+        scheduleImpact: 'minimal',
+        mpid: "e3355dfc-5b88-4f1b-9270-485e63e8cc86"
+      }],
+      mpid: "f3e0e54a-5f7b-43f4-a10d-f6d7ab57708b"
+    }],
+    mpid: "b098335a-4482-49ab-89cd-e517d7cb6aec"
+  }, {
     id: "site-work",
     title: "Site Work & Preparation",
     subtotal: 125000,
@@ -58,7 +198,10 @@ const mockEstimateData: EstimateData = {
       unit: "cubic yards",
       unitCost: 35,
       lineTotal: 87500,
-      mpid: "bcb30380-0bec-4731-9863-2a0bd30de746"
+      leadTime: 2,
+      installationTime: 3,
+      scheduleImpact: 'minimal',
+      mpid: "9c72b597-8dc8-46f8-83bc-03d3c77179d7"
     }, {
       id: "utilities",
       name: "Utility Connections",
@@ -68,68 +211,60 @@ const mockEstimateData: EstimateData = {
       unit: "lot",
       unitCost: 37500,
       lineTotal: 37500,
-      mpid: "019b2aec-1a3f-4188-9c25-c63a371823c6"
+      leadTime: 6,
+      installationTime: 4,
+      scheduleImpact: 'moderate',
+      mpid: "35958fbd-908a-4448-827a-a7afbbbb0ce3"
     }],
-    mpid: "766f46d9-39b9-42aa-a03f-077ddd4b3e4f"
-  }, {
-    id: "foundation",
-    title: "Foundation & Structural",
-    subtotal: 285000,
-    items: [{
-      id: "concrete-foundation",
-      name: "Concrete Foundation",
-      description: "Reinforced concrete foundation with waterproofing and insulation systems",
-      image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300&h=200&fit=crop",
-      quantity: 450,
-      unit: "cubic yards",
-      unitCost: 450,
-      lineTotal: 202500,
-      mpid: "f542cc91-9ee2-4af9-8e71-58eb8984a6c5"
-    }, {
-      id: "steel-framing",
-      name: "Steel Frame Structure",
-      description: "Structural steel framing for 5-story building including beams, columns, and connections",
-      image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=300&h=200&fit=crop",
-      quantity: 125,
-      unit: "tons",
-      unitCost: 660,
-      lineTotal: 82500,
-      mpid: "804255a3-b666-4a0f-a8e4-489584eee192"
-    }],
-    mpid: "a89cac6d-e542-4c0b-ab5a-6fb3072f24ec"
-  }, {
-    id: "exterior",
-    title: "Exterior & Envelope",
-    subtotal: 195000,
-    items: [{
-      id: "curtain-wall",
-      name: "Glass Curtain Wall System",
-      description: "High-performance glass curtain wall with thermal breaks and energy-efficient glazing",
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=300&h=200&fit=crop",
-      quantity: 8500,
-      unit: "sq ft",
-      unitCost: 18,
-      lineTotal: 153000,
-      mpid: "47211881-8a5c-42a5-8da0-36ef90b0a1a9"
-    }, {
-      id: "roofing",
-      name: "Premium Roofing System",
-      description: "TPO membrane roofing with insulation and green roof components",
-      image: "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=300&h=200&fit=crop",
-      quantity: 12000,
-      unit: "sq ft",
-      unitCost: 3.5,
-      lineTotal: 42000,
-      mpid: "d37be851-ddeb-43ad-b9d4-d18a9864d6cf"
-    }],
-    mpid: "6b4f7088-343b-46a3-869e-44e709d9af57"
+    mpid: "153663b0-7b37-4522-8c3e-33bdd79f7907"
   }],
   subtotal: 605000,
   taxRate: 0.0875,
   taxAmount: 52937.50,
-  grandTotal: 657937.50
+  grandTotal: 657937.50,
+  totalLeadTime: 12,
+  totalInstallationTime: 18
 };
 const ConstructionEstimate: React.FC = () => {
+  const [estimateData, setEstimateData] = useState<EstimateData>(mockEstimateData);
+  const handleOptionChange = (sectionId: string, itemId: string, optionId: string) => {
+    setEstimateData(prev => {
+      const newData = {
+        ...prev
+      };
+      const section = newData.sections.find(s => s.id === sectionId);
+      if (section) {
+        const item = section.items.find(i => i.id === itemId);
+        if (item && item.options) {
+          const selectedOption = item.options.find(o => o.id === optionId);
+          if (selectedOption) {
+            item.selectedOption = optionId;
+            item.unitCost = selectedOption.unitCost;
+            item.lineTotal = item.quantity * selectedOption.unitCost;
+            item.image = selectedOption.image;
+            item.description = selectedOption.description;
+            item.leadTime = selectedOption.leadTime;
+            item.installationTime = selectedOption.installationTime;
+            item.scheduleImpact = selectedOption.scheduleImpact;
+
+            // Recalculate section subtotal
+            section.subtotal = section.items.reduce((sum, i) => sum + i.lineTotal, 0);
+          }
+        }
+      }
+
+      // Recalculate totals
+      newData.subtotal = newData.sections.reduce((sum, s) => sum + s.subtotal, 0);
+      newData.taxAmount = newData.subtotal * newData.taxRate;
+      newData.grandTotal = newData.subtotal + newData.taxAmount;
+
+      // Recalculate schedule
+      const allItems = newData.sections.flatMap(s => s.items);
+      newData.totalLeadTime = Math.max(...allItems.map(i => i.leadTime || 0));
+      newData.totalInstallationTime = allItems.reduce((sum, i) => sum + (i.installationTime || 0), 0);
+      return newData;
+    });
+  };
   return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50" data-magicpath-id="0" data-magicpath-path="ConstructionEstimate.tsx">
       <div className="max-w-6xl mx-auto px-4 py-8" data-magicpath-id="1" data-magicpath-path="ConstructionEstimate.tsx">
         <motion.div initial={{
@@ -141,12 +276,12 @@ const ConstructionEstimate: React.FC = () => {
       }} transition={{
         duration: 0.6
       }} className="bg-white rounded-2xl shadow-xl overflow-hidden" data-magicpath-id="2" data-magicpath-path="ConstructionEstimate.tsx">
-          <EstimateHeader projectTitle={mockEstimateData.projectTitle} clientName={mockEstimateData.clientName} clientAddress={mockEstimateData.clientAddress} estimateId={mockEstimateData.estimateId} estimateDate={mockEstimateData.estimateDate} data-magicpath-id="3" data-magicpath-path="ConstructionEstimate.tsx" />
+          <EstimateHeader projectTitle={estimateData.projectTitle} clientName={estimateData.clientName} clientAddress={estimateData.clientAddress} estimateId={estimateData.estimateId} estimateDate={estimateData.estimateDate} data-magicpath-id="3" data-magicpath-path="ConstructionEstimate.tsx" />
           
-          <ProjectOverviewSection description={mockEstimateData.projectDescription} image={mockEstimateData.projectImage} data-magicpath-id="4" data-magicpath-path="ConstructionEstimate.tsx" />
+          <ProjectOverviewSection description={estimateData.projectDescription} image={estimateData.projectImage} data-magicpath-id="4" data-magicpath-path="ConstructionEstimate.tsx" />
           
           <div className="px-8 py-6 space-y-8" data-magicpath-id="5" data-magicpath-path="ConstructionEstimate.tsx">
-            {mockEstimateData.sections.map((section, index) => <motion.div key={section.id} initial={{
+            {estimateData.sections.map((section, index) => <motion.div key={section.id} initial={{
             opacity: 0,
             y: 30
           }} animate={{
@@ -156,11 +291,11 @@ const ConstructionEstimate: React.FC = () => {
             duration: 0.5,
             delay: index * 0.1
           }} data-magicpath-id="6" data-magicpath-path="ConstructionEstimate.tsx">
-                <EstimateSection title={section.title} items={section.items} subtotal={section.subtotal} data-magicpath-id="7" data-magicpath-path="ConstructionEstimate.tsx" />
+                <EstimateSection title={section.title} items={section.items} subtotal={section.subtotal} onOptionChange={(itemId, optionId) => handleOptionChange(section.id, itemId, optionId)} data-magicpath-id="7" data-magicpath-path="ConstructionEstimate.tsx" />
               </motion.div>)}
           </div>
           
-          <EstimateSummary subtotal={mockEstimateData.subtotal} taxRate={mockEstimateData.taxRate} taxAmount={mockEstimateData.taxAmount} grandTotal={mockEstimateData.grandTotal} data-magicpath-id="8" data-magicpath-path="ConstructionEstimate.tsx" />
+          <EstimateSummary subtotal={estimateData.subtotal} taxRate={estimateData.taxRate} taxAmount={estimateData.taxAmount} grandTotal={estimateData.grandTotal} totalLeadTime={estimateData.totalLeadTime} totalInstallationTime={estimateData.totalInstallationTime} data-magicpath-id="8" data-magicpath-path="ConstructionEstimate.tsx" />
         </motion.div>
       </div>
     </div>;
