@@ -35,6 +35,7 @@ interface EstimateSectionProps {
   quoteStatus?: 'pending' | 'requested' | 'in-progress';
   expectedQuoteDate?: string;
   workByOthers?: boolean;
+  viewMode?: 'compact' | 'detailed';
   onOptionChange?: (itemId: string, optionId: string) => void;
 }
 const EstimateSection: React.FC<EstimateSectionProps> = ({
@@ -45,6 +46,7 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
   quoteStatus,
   expectedQuoteDate,
   workByOthers = false,
+  viewMode = 'compact',
   onOptionChange
 }) => {
   const formatCurrency = (amount: number) => {
@@ -140,15 +142,17 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
       }} transition={{
         duration: 0.4,
         delay: index * 0.1
-      }} className="bg-white rounded-lg p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-            <div className="grid lg:grid-cols-12 gap-6 items-start">
-              <div className="lg:col-span-3">
-                <figure>
-                  <img src={item.image} alt={`${item.name} - construction material or service`} className="w-full h-32 object-cover rounded-lg" />
-                </figure>
-              </div>
+      }} className={`bg-white rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-shadow ${viewMode === 'compact' ? 'p-4' : 'p-6'}`}>
+            <div className={`grid items-start ${viewMode === 'detailed' ? 'gap-6 lg:grid-cols-12' : 'gap-4 lg:grid-cols-8'}`}>
+              {viewMode === 'detailed' && (
+                <div className="lg:col-span-3">
+                  <figure>
+                    <img src={item.image} alt={`${item.name} - construction material or service`} className="w-full h-32 object-cover rounded-lg" />
+                  </figure>
+                </div>
+              )}
               
-              <div className="lg:col-span-5">
+              <div className={viewMode === 'detailed' ? 'lg:col-span-5' : 'lg:col-span-4'}>
                 <h5 className="text-lg font-semibold text-slate-800 mb-2">
                   {item.name}
                 </h5>
@@ -203,7 +207,7 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
                   </div>}
               </div>
               
-              <div className="lg:col-span-4">
+              <div className={viewMode === 'detailed' ? 'lg:col-span-4' : 'lg:col-span-4'}>
                 <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-2">
                   <div className="text-center lg:text-left">
                     <p className="text-xs text-slate-500 uppercase tracking-wide">Quantity</p>

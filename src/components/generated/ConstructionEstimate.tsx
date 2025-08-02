@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { LayoutGrid, List } from 'lucide-react';
 import EstimateHeader from './EstimateHeader';
 import ProjectOverviewSection from './ProjectOverviewSection';
 import EstimateSection from './EstimateSection';
@@ -522,6 +523,7 @@ const mockEstimateData: EstimateData = {
 };
 const ConstructionEstimate: React.FC = () => {
   const [estimateData, setEstimateData] = useState<EstimateData>(mockEstimateData);
+  const [viewMode, setViewMode] = useState<'compact' | 'detailed'>('compact');
   const handleOptionChange = (sectionId: string, itemId: string, optionId: string) => {
     setEstimateData(prev => {
       const newData = {
@@ -607,6 +609,40 @@ const ConstructionEstimate: React.FC = () => {
           
           <ProjectOverviewSection description={estimateData.projectDescription} image={estimateData.projectImage} />
           
+          {/* View Mode Toggle */}
+          <div className="px-8 py-4 border-b border-slate-200">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-slate-800">Project Sections</h3>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-slate-600">View:</span>
+                <div className="flex bg-slate-100 rounded-lg p-1">
+                  <button
+                    onClick={() => setViewMode('compact')}
+                    className={`flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium transition-all ${
+                      viewMode === 'compact' 
+                        ? 'bg-white text-blue-600 shadow-sm' 
+                        : 'text-slate-600 hover:text-slate-800'
+                    }`}
+                  >
+                    <List className="w-4 h-4" />
+                    Compact
+                  </button>
+                  <button
+                    onClick={() => setViewMode('detailed')}
+                    className={`flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium transition-all ${
+                      viewMode === 'detailed' 
+                        ? 'bg-white text-blue-600 shadow-sm' 
+                        : 'text-slate-600 hover:text-slate-800'
+                    }`}
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                    Detailed
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <div className="px-8 py-6 space-y-8">
             {estimateData.sections.map((section, index) => <motion.div key={section.id} initial={{
             opacity: 0,
@@ -618,7 +654,7 @@ const ConstructionEstimate: React.FC = () => {
             duration: 0.5,
             delay: index * 0.1
           }}>
-                <EstimateSection title={section.title} items={section.items} subtotal={section.subtotal} hasQuote={section.hasQuote} quoteStatus={section.quoteStatus} expectedQuoteDate={section.expectedQuoteDate} workByOthers={section.workByOthers} onOptionChange={(itemId, optionId) => handleOptionChange(section.id, itemId, optionId)} />
+                <EstimateSection title={section.title} items={section.items} subtotal={section.subtotal} hasQuote={section.hasQuote} quoteStatus={section.quoteStatus} expectedQuoteDate={section.expectedQuoteDate} workByOthers={section.workByOthers} viewMode={viewMode} onOptionChange={(itemId, optionId) => handleOptionChange(section.id, itemId, optionId)} />
               </motion.div>)}
           </div>
           
