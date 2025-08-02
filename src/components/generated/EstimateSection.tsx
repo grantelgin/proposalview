@@ -111,12 +111,12 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
   };
   return <section className="bg-slate-50 rounded-xl p-6">
       <div 
-        className="flex items-center justify-between mb-6 cursor-pointer hover:bg-slate-50 -mx-6 px-6 py-3 rounded-lg transition-colors"
+        className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 cursor-pointer hover:bg-slate-50 -mx-6 px-6 py-3 rounded-lg transition-colors gap-3 sm:gap-0"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center gap-3">
-          <Package className="w-6 h-6 text-blue-600" />
-          <h4 className="text-xl font-bold text-slate-800">{title}</h4>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Package className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+          <h4 className="text-lg sm:text-xl font-bold text-slate-800">{title}</h4>
           {workByOthers && <div className="flex items-center gap-2 px-3 py-1 rounded-full border text-sm font-medium text-purple-600 bg-purple-50 border-purple-200">
               <Users className="w-4 h-4" />
               <span>Work by Others</span>
@@ -126,14 +126,14 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
               <span className="capitalize">Quote {quoteStatus}</span>
             </div>}
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <div className="text-right">
-            <p className="text-sm text-slate-500">Section Total</p>
+            <p className="text-xs sm:text-sm text-slate-500">Section Total</p>
             {workByOthers ? <div>
-                <p className="text-2xl font-bold text-purple-600">By Others</p>
+                <p className="text-lg sm:text-2xl font-bold text-purple-600">By Others</p>
                 <p className="text-xs text-slate-500">Schedule Impact Only</p>
-              </div> : hasQuote ? <p className="text-2xl font-bold text-blue-600">{formatCurrency(subtotal)}</p> : <div>
-                <p className="text-2xl font-bold text-slate-400">TBD</p>
+              </div> : hasQuote ? <p className="text-lg sm:text-2xl font-bold text-blue-600">{formatCurrency(subtotal)}</p> : <div>
+                <p className="text-lg sm:text-2xl font-bold text-slate-400">TBD</p>
                 {expectedQuoteDate && <p className="text-xs text-slate-500">Expected: {expectedQuoteDate}</p>}
               </div>}
           </div>
@@ -166,8 +166,8 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
       }} transition={{
         duration: 0.4,
         delay: index * 0.1
-      }} className={`bg-white rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-shadow ${viewMode === 'compact' ? 'p-4' : 'p-6'}`}>
-            <div className={`grid items-start ${viewMode === 'detailed' ? 'gap-6 lg:grid-cols-12' : 'gap-4 lg:grid-cols-8'}`}>
+      }} className={`bg-white rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-shadow ${viewMode === 'compact' ? 'p-3 sm:p-4' : 'p-4 sm:p-6'}`}>
+            <div className={`${viewMode === 'detailed' ? 'space-y-4 lg:grid lg:grid-cols-12 lg:gap-6 lg:space-y-0' : 'space-y-3 lg:grid lg:grid-cols-8 lg:gap-4 lg:space-y-0'} items-start`}>
               {viewMode === 'detailed' && (
                 <div className="lg:col-span-3">
                   <figure>
@@ -177,15 +177,15 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
               )}
               
               <div className={viewMode === 'detailed' ? 'lg:col-span-5' : 'lg:col-span-4'}>
-                <h5 className="text-lg font-semibold text-slate-800 mb-2">
+                <h5 className="text-base sm:text-lg font-semibold text-slate-800 mb-2">
                   {item.name}
                 </h5>
-                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                <p className="text-slate-600 text-sm leading-relaxed mb-3 sm:mb-4">
                   {item.description}
                 </p>
                 
                 {/* Schedule Information */}
-                {(item.leadTime || item.installationTime || item.scheduleImpact) && <div className="flex flex-wrap gap-3 mb-4">
+                {(item.leadTime || item.installationTime || item.scheduleImpact) && <div className="flex flex-wrap gap-2 sm:gap-3 mb-3 sm:mb-4">
                     {item.leadTime && <div className="flex items-center gap-1 text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">
                         <Calendar className="w-3 h-3" />
                         <span>Lead: {item.leadTime}w</span>
@@ -232,35 +232,35 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
               </div>
               
               <div className={viewMode === 'detailed' ? 'lg:col-span-4' : 'lg:col-span-4'}>
-                <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-2">
-                  <div className="text-center lg:text-left">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-2">
+                  <div className="text-left">
                     <p className="text-xs text-slate-500 uppercase tracking-wide">Quantity</p>
-                    <p className="font-semibold text-slate-800">
+                    <p className="font-semibold text-slate-800 text-sm sm:text-base">
                       {formatNumber(item.quantity)} {item.unit}
                     </p>
                   </div>
                   
-                  <div className="text-center lg:text-left">
+                  <div className="text-left">
                     <p className="text-xs text-slate-500 uppercase tracking-wide">Unit Cost</p>
-                    <p className="font-semibold text-slate-800">
+                    <p className="font-semibold text-slate-800 text-sm sm:text-base">
                       {workByOthers ? 'By Others' : hasQuote ? formatCurrency(item.unitCost) : 'TBD'}
                     </p>
                   </div>
                   
-                  <div className="col-span-2 lg:col-span-1 text-center lg:text-left">
+                  <div className="col-span-1 sm:col-span-2 lg:col-span-1 text-left">
                     <p className="text-xs text-slate-500 uppercase tracking-wide">Line Total</p>
-                    <div className="flex items-center gap-1 justify-center lg:justify-start">
+                    <div className="flex items-center gap-1 justify-start">
                       {workByOthers ? <>
                           <Users className="w-4 h-4 text-purple-600" />
-                          <p className="text-xl font-bold text-purple-600">By Others</p>
+                          <p className="text-lg sm:text-xl font-bold text-purple-600">By Others</p>
                         </> : hasQuote ? <>
                           <DollarSign className="w-4 h-4 text-green-600" />
-                          <p className="text-xl font-bold text-green-600">
+                          <p className="text-lg sm:text-xl font-bold text-green-600">
                             {formatCurrency(item.lineTotal).replace('$', '')}
                           </p>
                         </> : <>
                           <FileQuestion className="w-4 h-4 text-slate-400" />
-                          <p className="text-xl font-bold text-slate-400">TBD</p>
+                          <p className="text-lg sm:text-xl font-bold text-slate-400">TBD</p>
                         </>}
                     </div>
                   </div>

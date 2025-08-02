@@ -26,17 +26,17 @@ const EstimateSummary: React.FC<EstimateSummaryProps> = ({
   const formatPercentage = (rate: number) => {
     return `${(rate * 100).toFixed(2)}%`;
   };
-  return <footer className="bg-gradient-to-r from-slate-800 to-blue-900 text-white px-8 py-8">
+  return <footer className="bg-gradient-to-r from-slate-800 to-blue-900 text-white px-4 sm:px-8 py-6 sm:py-8">
       <div className="max-w-4xl ml-auto">
-        <div className="flex items-center gap-3 mb-6">
-          <Calculator className="w-6 h-6 text-blue-300" />
-          <h3 className="text-2xl font-bold">Estimate Summary</h3>
+        <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <Calculator className="w-5 h-5 sm:w-6 sm:h-6 text-blue-300" />
+          <h3 className="text-lg sm:text-2xl font-bold">Estimate Summary</h3>
         </div>
         
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Financial Summary */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-blue-200 mb-4">Financial Breakdown</h4>
+            <h4 className="text-base sm:text-lg font-semibold text-blue-200 mb-3 sm:mb-4">Financial Breakdown</h4>
             
             <motion.div initial={{
             opacity: 0,
@@ -46,12 +46,12 @@ const EstimateSummary: React.FC<EstimateSummaryProps> = ({
             x: 0
           }} transition={{
             duration: 0.4
-          }} className="flex items-center justify-between py-3 border-b border-slate-600">
+          }} className="flex items-center justify-between py-2 sm:py-3 border-b border-slate-600">
               <div className="flex items-center gap-2">
-                <Receipt className="w-5 h-5 text-blue-300" />
-                <span className="text-lg">Subtotal</span>
+                <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-blue-300" />
+                <span className="text-sm sm:text-lg">Subtotal</span>
               </div>
-              <span className="text-xl font-semibold">{formatCurrency(subtotal)}</span>
+              <span className="text-base sm:text-xl font-semibold">{formatCurrency(subtotal)}</span>
             </motion.div>
             
             <motion.div initial={{

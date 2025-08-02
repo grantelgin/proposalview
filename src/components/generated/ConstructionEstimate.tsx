@@ -595,7 +595,7 @@ const ConstructionEstimate: React.FC = () => {
     });
   };
   return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
         <motion.div initial={{
         opacity: 0,
         y: 20
@@ -610,26 +610,26 @@ const ConstructionEstimate: React.FC = () => {
           <ProjectOverviewSection description={estimateData.projectDescription} image={estimateData.projectImage} />
           
           {/* View Mode Toggle */}
-          <div className="px-8 py-4 border-b border-slate-200">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-slate-800">Project Sections</h3>
+          <div className="px-4 sm:px-8 py-4 border-b border-slate-200">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+              <h3 className="text-base sm:text-lg font-semibold text-slate-800">Project Sections</h3>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-600">View:</span>
+                <span className="text-xs sm:text-sm text-slate-600">View:</span>
                 <div className="flex bg-slate-100 rounded-lg p-1">
                   <button
                     onClick={() => setViewMode('compact')}
-                    className={`flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium transition-all ${
+                    className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-medium transition-all ${
                       viewMode === 'compact' 
                         ? 'bg-white text-blue-600 shadow-sm' 
                         : 'text-slate-600 hover:text-slate-800'
                     }`}
                   >
-                    <List className="w-4 h-4" />
-                    Compact
+                    <List className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Compact</span>
                   </button>
                   <button
                     onClick={() => setViewMode('detailed')}
-                    className={`flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium transition-all ${
+                    className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-medium transition-all ${
                       viewMode === 'detailed' 
                         ? 'bg-white text-blue-600 shadow-sm' 
                         : 'text-slate-600 hover:text-slate-800'
@@ -643,7 +643,7 @@ const ConstructionEstimate: React.FC = () => {
             </div>
           </div>
           
-          <div className="px-8 py-6 space-y-8">
+          <div className="px-4 sm:px-8 py-4 sm:py-6 space-y-6 sm:space-y-8">
             {estimateData.sections.map((section, index) => <motion.div key={section.id} initial={{
             opacity: 0,
             y: 30
