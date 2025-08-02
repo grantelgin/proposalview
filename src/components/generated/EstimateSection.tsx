@@ -55,7 +55,9 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
     }).format(amount);
   };
   const formatNumber = (num: number) => {
@@ -114,14 +116,21 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
         className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 cursor-pointer hover:bg-slate-50 -mx-6 px-6 py-3 rounded-lg transition-colors gap-3 sm:gap-0"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center gap-2 sm:gap-3">
-          <Package className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
-          <h4 className="text-lg sm:text-xl font-bold text-slate-800">{title}</h4>
-          {workByOthers && <div className="flex items-center gap-2 px-3 py-1 rounded-full border text-sm font-medium text-purple-600 bg-purple-50 border-purple-200">
-              <Users className="w-4 h-4" />
-              <span>Work by Others</span>
-            </div>}
-          {!hasQuote && !workByOthers && <div className={`flex items-center gap-2 px-3 py-1 rounded-full border text-sm font-medium ${getQuoteStatusColor(quoteStatus)}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Package className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+            <h4 className="text-lg sm:text-xl font-bold text-slate-800">{title}</h4>
+            {workByOthers && <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full border text-sm font-medium text-purple-600 bg-purple-50 border-purple-200">
+                <Users className="w-4 h-4" />
+                <span>Work by Others</span>
+              </div>}
+            {!hasQuote && !workByOthers && <div className={`hidden sm:flex items-center gap-2 px-3 py-1 rounded-full border text-sm font-medium ${getQuoteStatusColor(quoteStatus)}`}>
+                {getQuoteStatusIcon(quoteStatus)}
+                <span className="capitalize">Quote {quoteStatus}</span>
+              </div>}
+          </div>
+          {/* Mobile quote status - shown under title */}
+          {!hasQuote && !workByOthers && <div className={`sm:hidden flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-medium ${getQuoteStatusColor(quoteStatus)} self-start`}>
               {getQuoteStatusIcon(quoteStatus)}
               <span className="capitalize">Quote {quoteStatus}</span>
             </div>}
