@@ -10,6 +10,8 @@ interface OptionVariant {
   leadTime: number;
   installationTime: number;
   scheduleImpact: 'minimal' | 'moderate' | 'significant';
+  hasQuote?: boolean;
+  quoteStatus?: 'pending' | 'requested' | 'in-progress';
 }
 interface LineItem {
   id: string;
@@ -207,8 +209,8 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-1">
                               <p className="font-medium text-slate-800 text-sm">{option.name}</p>
-                              <p className={`font-semibold text-sm ${option.hasQuote === false ? 'text-slate-400' : 'text-blue-600'}`}>
-                                {option.hasQuote === false ? 'TBD' : formatCurrency(option.unitCost)}
+                              <p className={`font-semibold text-sm ${!option.hasQuote ? 'text-slate-400' : 'text-blue-600'}`}>
+                                {!option.hasQuote ? 'TBD' : formatCurrency(option.unitCost)}
                               </p>
                             </div>
                             <p className="text-xs text-slate-600 mb-2">{option.description}</p>
