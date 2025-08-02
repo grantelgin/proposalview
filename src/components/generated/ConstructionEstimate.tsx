@@ -35,6 +35,9 @@ interface EstimateSectionData {
   title: string;
   items: LineItem[];
   subtotal: number;
+  hasQuote?: boolean;
+  quoteStatus?: 'pending' | 'requested' | 'in-progress';
+  expectedQuoteDate?: string;
 }
 interface EstimateData {
   projectTitle: string;
@@ -198,6 +201,50 @@ const mockEstimateData: EstimateData = {
       installationTime: 4,
       scheduleImpact: 'moderate'
     }]
+  }, {
+    id: "cabinetry",
+    title: "Custom Cabinetry & Millwork",
+    subtotal: 0,
+    hasQuote: false,
+    quoteStatus: 'requested',
+    expectedQuoteDate: 'March 25, 2024',
+    items: [{
+      id: "studio-millwork",
+      name: "Recording Studio Millwork",
+      description: "Custom hardwood millwork for control room including built-in equipment racks, cable management systems, and acoustically designed cabinetry",
+      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop",
+      quantity: 1,
+      unit: "complete system",
+      unitCost: 0,
+      lineTotal: 0,
+      leadTime: 10,
+      installationTime: 4,
+      scheduleImpact: 'moderate'
+    }, {
+      id: "live-room-treatments",
+      name: "Live Room Acoustic Treatments",
+      description: "Custom built acoustic panels, sound baffles, and moveable partitions with premium wood finish for the live performance area",
+      image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop",
+      quantity: 1,
+      unit: "complete installation",
+      unitCost: 0,
+      lineTotal: 0,
+      leadTime: 8,
+      installationTime: 3,
+      scheduleImpact: 'moderate'
+    }, {
+      id: "booth-cabinetry",
+      name: "Recording Booth Built-ins",
+      description: "Custom recording booth interiors including instrument storage, headphone distribution panels, and integrated seating with acoustic considerations",
+      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=300&h=200&fit=crop",
+      quantity: 4,
+      unit: "recording booths",
+      unitCost: 0,
+      lineTotal: 0,
+      leadTime: 12,
+      installationTime: 2,
+      scheduleImpact: 'minimal'
+    }]
   }],
   subtotal: 605000,
   taxRate: 0.0875,
@@ -272,7 +319,7 @@ const ConstructionEstimate: React.FC = () => {
             duration: 0.5,
             delay: index * 0.1
           }}>
-                <EstimateSection title={section.title} items={section.items} subtotal={section.subtotal} onOptionChange={(itemId, optionId) => handleOptionChange(section.id, itemId, optionId)} />
+                <EstimateSection title={section.title} items={section.items} subtotal={section.subtotal} hasQuote={section.hasQuote} quoteStatus={section.quoteStatus} expectedQuoteDate={section.expectedQuoteDate} onOptionChange={(itemId, optionId) => handleOptionChange(section.id, itemId, optionId)} />
               </motion.div>)}
           </div>
           

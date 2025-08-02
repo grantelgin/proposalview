@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { DollarSign, Package, Clock, Calendar, AlertTriangle, CheckCircle } from 'lucide-react';
+import { DollarSign, Package, Clock, Calendar, AlertTriangle, CheckCircle, FileQuestion, MessageSquare } from 'lucide-react';
 interface OptionVariant {
   id: string;
   name: string;
@@ -31,12 +31,18 @@ interface EstimateSectionProps {
   title: string;
   items: LineItem[];
   subtotal: number;
+  hasQuote?: boolean;
+  quoteStatus?: 'pending' | 'requested' | 'in-progress';
+  expectedQuoteDate?: string;
   onOptionChange?: (itemId: string, optionId: string) => void;
 }
 const EstimateSection: React.FC<EstimateSectionProps> = ({
   title,
   items,
   subtotal,
+  hasQuote = true,
+  quoteStatus,
+  expectedQuoteDate,
   onOptionChange
 }) => {
   const formatCurrency = (amount: number) => {
@@ -72,15 +78,46 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
         return <Clock className="w-4 h-4" />;
     }
   };
+  const getQuoteStatusColor = (status?: string) => {
+    switch (status) {
+      case 'pending':
+        return 'text-orange-600 bg-orange-50 border-orange-200';
+      case 'requested':
+        return 'text-blue-600 bg-blue-50 border-blue-200';
+      case 'in-progress':
+        return 'text-purple-600 bg-purple-50 border-purple-200';
+      default:
+        return 'text-gray-600 bg-gray-50 border-gray-200';
+    }
+  };
+  const getQuoteStatusIcon = (status?: string) => {
+    switch (status) {
+      case 'pending':
+        return <Clock className="w-4 h-4" />;
+      case 'requested':
+        return <MessageSquare className="w-4 h-4" />;
+      case 'in-progress':
+        return <FileQuestion className="w-4 h-4" />;
+      default:
+        return <FileQuestion className="w-4 h-4" />;
+    }
+  };
   return <section className="bg-slate-50 rounded-xl p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Package className="w-6 h-6 text-blue-600" />
           <h4 className="text-xl font-bold text-slate-800">{title}</h4>
+          {!hasQuote && <div className={`flex items-center gap-2 px-3 py-1 rounded-full border text-sm font-medium ${getQuoteStatusColor(quoteStatus)}`}>
+              {getQuoteStatusIcon(quoteStatus)}
+              <span className="capitalize">Quote {quoteStatus}</span>
+            </div>}
         </div>
         <div className="text-right">
           <p className="text-sm text-slate-500">Section Total</p>
-          <p className="text-2xl font-bold text-blue-600">{formatCurrency(subtotal)}</p>
+          {hasQuote ? <p className="text-2xl font-bold text-blue-600">{formatCurrency(subtotal)}</p> : <div>
+              <p className="text-2xl font-bold text-slate-400">TBD</p>
+              {expectedQuoteDate && <p className="text-xs text-slate-500">Expected: {expectedQuoteDate}</p>}
+            </div>}
         </div>
       </div>
       
@@ -167,17 +204,22 @@ const EstimateSection: React.FC<EstimateSectionProps> = ({
                   <div className="text-center lg:text-left">
                     <p className="text-xs text-slate-500 uppercase tracking-wide">Unit Cost</p>
                     <p className="font-semibold text-slate-800">
-                      {formatCurrency(item.unitCost)}
+                      {hasQuote ? formatCurrency(item.unitCost) : 'TBD'}
                     </p>
                   </div>
                   
                   <div className="col-span-2 lg:col-span-1 text-center lg:text-left">
                     <p className="text-xs text-slate-500 uppercase tracking-wide">Line Total</p>
                     <div className="flex items-center gap-1 justify-center lg:justify-start">
-                      <DollarSign className="w-4 h-4 text-green-600" />
-                      <p className="text-xl font-bold text-green-600">
-                        {formatCurrency(item.lineTotal).replace('$', '')}
-                      </p>
+                      {hasQuote ? <>
+                          <DollarSign className="w-4 h-4 text-green-600" />
+                          <p className="text-xl font-bold text-green-600">
+                            {formatCurrency(item.lineTotal).replace('$', '')}
+                          </p>
+                        </> : <>
+                          <FileQuestion className="w-4 h-4 text-slate-400" />
+                          <p className="text-xl font-bold text-slate-400">TBD</p>
+                        </>}
                     </div>
                   </div>
                 </div>
