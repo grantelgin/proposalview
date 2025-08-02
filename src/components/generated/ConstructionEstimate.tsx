@@ -13,7 +13,6 @@ interface OptionVariant {
   leadTime: number; // in weeks
   installationTime: number; // in weeks
   scheduleImpact: 'minimal' | 'moderate' | 'significant';
-  mpid?: string;
 }
 interface LineItem {
   id: string;
@@ -30,14 +29,12 @@ interface LineItem {
   hasOptions?: boolean;
   options?: OptionVariant[];
   selectedOption?: string;
-  mpid?: string;
 }
 interface EstimateSectionData {
   id: string;
   title: string;
   items: LineItem[];
   subtotal: number;
-  mpid?: string;
 }
 interface EstimateData {
   projectTitle: string;
@@ -54,7 +51,6 @@ interface EstimateData {
   grandTotal: number;
   totalLeadTime: number;
   totalInstallationTime: number;
-  mpid?: string;
 }
 const mockEstimateData: EstimateData = {
   projectTitle: "Luxury Commercial Office Building",
@@ -87,8 +83,7 @@ const mockEstimateData: EstimateData = {
         unitCost: 245000,
         leadTime: 8,
         installationTime: 6,
-        scheduleImpact: 'minimal',
-        mpid: "5bfd74ee-39de-4a14-97fb-a4ab64d6dafc"
+        scheduleImpact: 'minimal'
       }, {
         id: "steel-frame",
         name: "Steel Frame System",
@@ -97,12 +92,9 @@ const mockEstimateData: EstimateData = {
         unitCost: 285000,
         leadTime: 12,
         installationTime: 4,
-        scheduleImpact: 'moderate',
-        mpid: "e509d7b4-0742-48dd-8d35-cffc63d2b55d"
-      }],
-      mpid: "07596eb3-08cd-42b5-b9cd-61ab05d038f5"
-    }],
-    mpid: "0f34cdfc-e579-4701-9ee2-ad5305264463"
+        scheduleImpact: 'moderate'
+      }]
+    }]
   }, {
     id: "exterior",
     title: "Exterior & Envelope",
@@ -126,8 +118,7 @@ const mockEstimateData: EstimateData = {
         unitCost: 18,
         leadTime: 6,
         installationTime: 3,
-        scheduleImpact: 'minimal',
-        mpid: "d256ce4d-b5f5-470d-8f95-a1b80663a714"
+        scheduleImpact: 'minimal'
       }, {
         id: "hardiboard-siding",
         name: "HardiBoard Fiber Cement",
@@ -136,10 +127,8 @@ const mockEstimateData: EstimateData = {
         unitCost: 22,
         leadTime: 4,
         installationTime: 5,
-        scheduleImpact: 'moderate',
-        mpid: "f90160f0-2e24-45a6-a4e1-d5bb64ba8011"
-      }],
-      mpid: "cf7a6e68-5a8c-4f4c-afbc-b402d3dce137"
+        scheduleImpact: 'moderate'
+      }]
     }, {
       id: "roofing-system",
       name: "Premium Roofing System",
@@ -159,8 +148,7 @@ const mockEstimateData: EstimateData = {
         unitCost: 3.5,
         leadTime: 3,
         installationTime: 2,
-        scheduleImpact: 'minimal',
-        mpid: "032f5dbe-95de-4fd6-9c3d-d3cf76024d36"
+        scheduleImpact: 'minimal'
       }, {
         id: "slate-blue",
         name: "Slate Blue TPO",
@@ -169,8 +157,7 @@ const mockEstimateData: EstimateData = {
         unitCost: 4.2,
         leadTime: 4,
         installationTime: 2,
-        scheduleImpact: 'minimal',
-        mpid: "44ab96cc-ab6f-45a1-a22a-d5f03bd00083"
+        scheduleImpact: 'minimal'
       }, {
         id: "terra-cotta",
         name: "Terra Cotta TPO",
@@ -179,12 +166,9 @@ const mockEstimateData: EstimateData = {
         unitCost: 4.0,
         leadTime: 5,
         installationTime: 2,
-        scheduleImpact: 'minimal',
-        mpid: "e3355dfc-5b88-4f1b-9270-485e63e8cc86"
-      }],
-      mpid: "f3e0e54a-5f7b-43f4-a10d-f6d7ab57708b"
-    }],
-    mpid: "b098335a-4482-49ab-89cd-e517d7cb6aec"
+        scheduleImpact: 'minimal'
+      }]
+    }]
   }, {
     id: "site-work",
     title: "Site Work & Preparation",
@@ -200,8 +184,7 @@ const mockEstimateData: EstimateData = {
       lineTotal: 87500,
       leadTime: 2,
       installationTime: 3,
-      scheduleImpact: 'minimal',
-      mpid: "9c72b597-8dc8-46f8-83bc-03d3c77179d7"
+      scheduleImpact: 'minimal'
     }, {
       id: "utilities",
       name: "Utility Connections",
@@ -213,10 +196,8 @@ const mockEstimateData: EstimateData = {
       lineTotal: 37500,
       leadTime: 6,
       installationTime: 4,
-      scheduleImpact: 'moderate',
-      mpid: "35958fbd-908a-4448-827a-a7afbbbb0ce3"
-    }],
-    mpid: "153663b0-7b37-4522-8c3e-33bdd79f7907"
+      scheduleImpact: 'moderate'
+    }]
   }],
   subtotal: 605000,
   taxRate: 0.0875,
@@ -265,8 +246,8 @@ const ConstructionEstimate: React.FC = () => {
       return newData;
     });
   };
-  return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50" data-magicpath-id="0" data-magicpath-path="ConstructionEstimate.tsx">
-      <div className="max-w-6xl mx-auto px-4 py-8" data-magicpath-id="1" data-magicpath-path="ConstructionEstimate.tsx">
+  return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         <motion.div initial={{
         opacity: 0,
         y: 20
@@ -275,12 +256,12 @@ const ConstructionEstimate: React.FC = () => {
         y: 0
       }} transition={{
         duration: 0.6
-      }} className="bg-white rounded-2xl shadow-xl overflow-hidden" data-magicpath-id="2" data-magicpath-path="ConstructionEstimate.tsx">
-          <EstimateHeader projectTitle={estimateData.projectTitle} clientName={estimateData.clientName} clientAddress={estimateData.clientAddress} estimateId={estimateData.estimateId} estimateDate={estimateData.estimateDate} data-magicpath-id="3" data-magicpath-path="ConstructionEstimate.tsx" />
+      }} className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <EstimateHeader projectTitle={estimateData.projectTitle} clientName={estimateData.clientName} clientAddress={estimateData.clientAddress} estimateId={estimateData.estimateId} estimateDate={estimateData.estimateDate} />
           
-          <ProjectOverviewSection description={estimateData.projectDescription} image={estimateData.projectImage} data-magicpath-id="4" data-magicpath-path="ConstructionEstimate.tsx" />
+          <ProjectOverviewSection description={estimateData.projectDescription} image={estimateData.projectImage} />
           
-          <div className="px-8 py-6 space-y-8" data-magicpath-id="5" data-magicpath-path="ConstructionEstimate.tsx">
+          <div className="px-8 py-6 space-y-8">
             {estimateData.sections.map((section, index) => <motion.div key={section.id} initial={{
             opacity: 0,
             y: 30
@@ -290,12 +271,12 @@ const ConstructionEstimate: React.FC = () => {
           }} transition={{
             duration: 0.5,
             delay: index * 0.1
-          }} data-magicpath-id="6" data-magicpath-path="ConstructionEstimate.tsx">
-                <EstimateSection title={section.title} items={section.items} subtotal={section.subtotal} onOptionChange={(itemId, optionId) => handleOptionChange(section.id, itemId, optionId)} data-magicpath-id="7" data-magicpath-path="ConstructionEstimate.tsx" />
+          }}>
+                <EstimateSection title={section.title} items={section.items} subtotal={section.subtotal} onOptionChange={(itemId, optionId) => handleOptionChange(section.id, itemId, optionId)} />
               </motion.div>)}
           </div>
           
-          <EstimateSummary subtotal={estimateData.subtotal} taxRate={estimateData.taxRate} taxAmount={estimateData.taxAmount} grandTotal={estimateData.grandTotal} totalLeadTime={estimateData.totalLeadTime} totalInstallationTime={estimateData.totalInstallationTime} data-magicpath-id="8" data-magicpath-path="ConstructionEstimate.tsx" />
+          <EstimateSummary subtotal={estimateData.subtotal} taxRate={estimateData.taxRate} taxAmount={estimateData.taxAmount} grandTotal={estimateData.grandTotal} totalLeadTime={estimateData.totalLeadTime} totalInstallationTime={estimateData.totalInstallationTime} />
         </motion.div>
       </div>
     </div>;
